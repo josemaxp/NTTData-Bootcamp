@@ -1,0 +1,43 @@
+pipeline { 
+    agent any
+    parameters {
+        string(name:"PERSON", defaultValue: "Cristin", description:"Nombre de la persona")
+        string(name:"AGE", defaultValue: "23", description:"Edad de la persona")
+        choice(name:"PROFESSION", choices: ["Matemática", "Física", "Informática", "ajsja"], description:"Profesión de la persona")
+    }
+    stages { 
+        stage('Ejecución') {
+                steps{
+                    script {
+                        try{
+                            if (params.PERSON == 'Cristina') {
+                                echo "Hola ${params.PERSON}"
+                            } else {
+                                sh 'exit 1'
+                            }
+                        }catch (exc){
+                            echo 'Error. El nombre debe ser cristina'
+                        }
+                        try{
+                            if (params.AGE.toInteger() >= 18) {
+                                echo "Tienes ${params.AGE} años"
+                            } else {
+                                sh 'exit 1'
+                            }
+                        }catch (exc){
+                            echo 'Error. La edad debe de ser mayor a 18 años.'
+                        }
+                        try{
+                            if (params.PROFESSION == 'Matemática' || params.PROFESSION == 'Física' || params.PROFESSION == 'Informática') {
+                                echo "Eres ${params.PROFESSION}"
+                            } else {
+                                sh 'exit 1'
+                            }
+                        } catch (exc){
+                            echo 'Error. La profesión no está en la lista.'
+                        }
+                    }
+                }
+        }
+    }
+}

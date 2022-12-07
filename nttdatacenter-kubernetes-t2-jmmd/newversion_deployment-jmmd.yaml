@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jmmd-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jmmd-app
+  template:
+    metadata:
+      labels:
+        app: jmmd-app  
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15.1
+        ports:
+          - containerPort: 5432
+        envFrom:
+          - secretRef:
+              name: jmmd-app
+          - configMapRef:
+              name: jmmd-app
+        volumeMounts:
+        - name: postgres-database-storage
+          mountPath: /var/lib/pgsql/data
+      volumes:
+      - name: postgres-database-storage
+        persistentVolumeClaim:
+          claimName: pvc-jmmd

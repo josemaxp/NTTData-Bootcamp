@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "bootCampTest.fullname" . }}-test-connection"
+  labels:
+    {{- include "bootCampTest.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+  - name: nginx
+    image: nginx:alpine
+    port:
+      {{- if eq (int .Values.labels.ports.httpPort) 8080 }}
+        value: {{ required "Valid .Values.labels.ports.httpPort entry" .Values.labels.ports.httpPort }}
+      {{ else }}
+        value: {{ required "Value 8080 .Values.labels.ports.httpPort entry required!" .Values.labels.ports.httpPort }}
+      {{- end }}

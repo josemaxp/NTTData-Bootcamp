@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    tools {
+        maven '3.8.6'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                git 'https://github.com/josemaxp/NTTDataMavenJMMD.git'
+
+                sh "mvn clean package -DskipTest=true -f nttdatatallermvn-JMMD/pom.xml"
+            }
+        }
+        stage('Test') {
+            steps {
+
+                sh "mvn test -f nttdatatallermvn-JMMD/pom.xml"
+            }
+        }
+    }
+}
